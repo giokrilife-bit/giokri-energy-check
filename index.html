@@ -437,4 +437,1623 @@
         </label>
 
         <input
+          type="text"
+          id="fornitoreAttuale"
+          placeholder="Es. Enel, Eni, Edison..."
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="consumo">
+          Consumo del periodo
+        </label>
+
+        <input
+          type="number"
+          id="consumo"
+          min="0"
+          step="0.01"
+          placeholder="Es. 450"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label id="labelPrezzoAttuale" for="prezzoAttuale">
+          Prezzo energia (€/kWh)
+        </label>
+
+        <input
+          type="number"
+          id="prezzoAttuale"
+          min="0"
+          step="0.0001"
+          placeholder="€/kWh"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="quotaFissaAttuale">
+          Quota fissa mensile (€)
+        </label>
+
+        <input
+          type="number"
+          id="quotaFissaAttuale"
+          min="0"
+          step="0.01"
+          placeholder="Es. 12"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="totaleBolletta">
+          Totale effettivo bolletta (€)
+        </label>
+
+        <input
+          type="number"
+          id="totaleBolletta"
+          min="0"
+          step="0.01"
+          placeholder="Es. 135.50"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Tipo tariffa attuale
+        </label>
+
+        <div class="radio-group">
+
+          <label>
+            <input
+              type="radio"
+              name="tariffaAttuale"
+              value="Fissa"
+              checked
+            >
+            Fissa
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              name="tariffaAttuale"
+              value="Variabile"
+            >
+            Variabile
+          </label>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       3. PROPOSTA GIOKRI
+       ===================================================== -->
+
+  <div class="card input-section">
+
+    <h2>
+      3. Proposta da offrire
+    </h2>
+
+
+    <div class="offer-box">
+
+      <label for="offertaSelezionata">
+        Seleziona la proposta
+      </label>
+
+      <select
+        id="offertaSelezionata"
+        onchange="caricaOfferta()"
+      >
+
+        <option value="magis_mia_luce_fix_smart">
+          MAGIS – MIA LUCE FIX SMART
+        </option>
+
+        <option value="magis_mia_gas_fix_plus">
+          MAGIS – MIA GAS FIX PLUS
+        </option>
+
+        <option value="manuale">
+          Inserimento manuale
+        </option>
+
+      </select>
+
+
+      <div class="offer-info">
+
+        <div>
+
+          <strong>
+            Fornitore
+          </strong>
+
+          <br>
+
+          <span id="infoFornitore">
+            MAGIS
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            Offerta
+          </strong>
+
+          <br>
+
+          <span id="infoOfferta">
+            MIA LUCE FIX SMART
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            Tipo
+          </strong>
+
+          <br>
+
+          <span id="infoTipo">
+            Luce
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="grid">
+
+
+      <div>
+
+        <label for="fornitoreNuovo">
+          Fornitore proposto
+        </label>
+
+        <input
+          type="text"
+          id="fornitoreNuovo"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label id="labelPrezzoNuovo" for="prezzoNuovo">
+          Prezzo energia (€/kWh)
+        </label>
+
+        <input
+          type="number"
+          id="prezzoNuovo"
+          min="0"
+          step="0.0001"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="quotaFissaNuova">
+          Quota fissa mensile (€)
+        </label>
+
+        <input
+          type="number"
+          id="quotaFissaNuova"
+          min="0"
+          step="0.01"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Tipo tariffa proposta
+        </label>
+
+        <div class="radio-group">
+
+          <label>
+            <input
+              type="radio"
+              name="tariffaNuova"
+              value="Fissa"
+              checked
+            >
+            Fissa
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              name="tariffaNuova"
+              value="Variabile"
+            >
+            Variabile
+          </label>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="buttons">
+
+      <button
+        class="btn-primary"
+        onclick="calcolaConfronto()"
+      >
+        Calcola confronto
+      </button>
+
+
+      <button
+        class="btn-secondary"
+        onclick="nuovaAnalisi()"
+      >
+        Nuova analisi
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       RISULTATO
+       ===================================================== -->
+
+  <div
+    class="card"
+    id="risultato"
+  >
+
+    <h2>
+      Confronto Energia
+    </h2>
+
+
+    <div class="result-grid">
+
+
+      <!-- =================================================
+           FORNITURA ATTUALE
+           ================================================= -->
+
+      <div class="result-box">
+
+        <h3>
+          Fornitura attuale
+        </h3>
+
+
+        <div class="result-line">
+
+          <span>
+            Fornitore
+          </span>
+
+          <strong id="risFornitoreAttuale">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span>
+            Tariffa
+          </span>
+
+          <strong id="risTariffaAttuale">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span id="risLabelPrezzoAttuale">
+            Prezzo energia (€/kWh)
+          </span>
+
+          <strong id="risPrezzoAttuale">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span>
+            Quota fissa mensile
+          </span>
+
+          <strong id="risQuotaFissaAttuale">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span>
+            Costo periodo
+          </span>
+
+          <strong id="risCostoAttuale">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span>
+            Proiezione annuale
+          </span>
+
+          <strong id="risAnnualeAttuale">
+            -
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           PROPOSTA GIOKRI
+           ================================================= -->
+
+      <div class="result-box">
+
+        <h3>
+          Proposta GiOKri
+        </h3>
+
+
+        <div class="result-line">
+
+          <span>
+            Fornitore
+          </span>
+
+          <strong id="risFornitoreNuovo">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span>
+            Tariffa
+          </span>
+
+          <strong id="risTariffaNuova">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span id="risLabelPrezzoNuovo">
+            Prezzo energia (€/kWh)
+          </span>
+
+          <strong id="risPrezzoNuovo">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span>
+            Quota fissa mensile
+          </span>
+
+          <strong id="risQuotaFissaNuova">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span>
+            Costo periodo
+          </span>
+
+          <strong id="risCostoNuovo">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="result-line">
+
+          <span>
+            Proiezione annuale
+          </span>
+
+          <strong id="risAnnualeNuovo">
+            -
+          </strong>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         RISPARMIO
+         ================================================= -->
+
+    <div class="saving-box">
+
+      <div>
+        Risparmio annuo stimato
+      </div>
+
+
+      <div
+        class="big-number"
+        id="risparmioAnnuale"
+      >
+        € 0,00
+      </div>
+
+
+      <div>
+
+        Risparmio mensile stimato:
+
+        <strong id="risparmioMensile">
+          € 0,00
+        </strong>
+
+      </div>
+
+
+      <div>
+
+        Incidenza del risparmio:
+
+        <strong id="risparmioPercentuale">
+          0%
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CONTROLLO BOLLETTA
+         ================================================= -->
+
+    <div id="controlloBolletta"></div>
+
+
+    <div class="note">
+
+      <strong>
+        Nota metodologica:
+      </strong>
+
+      <br>
+
+      Il confronto viene effettuato utilizzando i dati
+      inseriti nella presente analisi: consumo, prezzo
+      dell'energia e quota fissa mensile.
+
+      La proiezione annuale è ottenuta rapportando il costo
+      del periodo alla durata della bolletta e moltiplicandolo
+      per 12 mesi.
+
+      Il calcolo è quindi uno strumento di confronto
+      semplificato e non sostituisce il dettaglio completo
+      della bolletta, che può comprendere imposte, IVA,
+      trasporto, gestione contatore, oneri e altre componenti.
+
+    </div>
+
+
+    <div class="buttons">
+
+      <button
+        class="btn-print"
+        onclick="window.print()"
+      >
+        Stampa / Salva PDF
+      </button>
+
+
+      <button
+        class="btn-secondary"
+        onclick="nuovaAnalisi()"
+      >
+        Nuova analisi
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <footer>
+    GiOKri Life | Energy Check
+  </footer>
+
+</div>
+
+
+<script>
+
+
+/* ==========================================================
+   DATABASE OFFERTE GIOKRI
+   ========================================================== */
+
+const OFFERTE_GIOKRI = {
+
+
+  /* --------------------------------------------------------
+     MAGIS - LUCE
+     -------------------------------------------------------- */
+
+  magis_mia_luce_fix_smart: {
+
+    fornitore: "MAGIS",
+
+    nome: "MIA LUCE FIX SMART",
+
+    tipo: "luce",
+
+    tariffa: "Fissa",
+
+    prezzo: 0.1704,
+
+    quotaFissa: 10.00,
+
+    unita: "kWh"
+
+  },
+
+
+  /* --------------------------------------------------------
+     MAGIS - GAS
+     -------------------------------------------------------- */
+
+  magis_mia_gas_fix_plus: {
+
+    fornitore: "MAGIS",
+
+    nome: "MIA GAS FIX PLUS",
+
+    tipo: "gas",
+
+    tariffa: "Fissa",
+
+    prezzo: 0.695,
+
+    quotaFissa: 12.50,
+
+    unita: "Smc"
+
+  }
+
+};
+
+
+/* ==========================================================
+   FUNZIONE EURO
+   ========================================================== */
+
+function euro(valore) {
+
+  return new Intl.NumberFormat(
+    "it-IT",
+    {
+      style: "currency",
+      currency: "EUR"
+    }
+  ).format(valore);
+
+}
+
+
+/* ==========================================================
+   FUNZIONE NUMERO
+   ========================================================== */
+
+function numero(
+  valore,
+  decimali = 2
+) {
+
+  return new Intl.NumberFormat(
+    "it-IT",
+    {
+      minimumFractionDigits: decimali,
+      maximumFractionDigits: decimali
+    }
+  ).format(valore);
+
+}
+
+
+/* ==========================================================
+   AGGIORNA ETICHETTE LUCE / GAS
+   ========================================================== */
+
+function aggiornaEtichetteUnita() {
+
+  const tipo =
+    document.getElementById(
+      "tipoEnergia"
+    ).value;
+
+
+  const unita =
+    tipo === "gas"
+      ? "Smc"
+      : "kWh";
+
+
+  const labelPrezzo =
+    tipo === "gas"
+      ? "Prezzo gas (€/Smc)"
+      : "Prezzo energia (€/kWh)";
+
+
+  document.getElementById(
+    "labelPrezzoAttuale"
+  ).textContent =
+    labelPrezzo;
+
+
+  document.getElementById(
+    "labelPrezzoNuovo"
+  ).textContent =
+    labelPrezzo;
+
+
+  document.getElementById(
+    "risLabelPrezzoAttuale"
+  ).textContent =
+    labelPrezzo;
+
+
+  document.getElementById(
+    "risLabelPrezzoNuovo"
+  ).textContent =
+    labelPrezzo;
+
+}
+
+
+/* ==========================================================
+   AGGIORNA TIPO ENERGIA
+   ========================================================== */
+
+function aggiornaTipoEnergia() {
+
+  const tipo =
+    document.getElementById(
+      "tipoEnergia"
+    ).value;
+
+
+  const select =
+    document.getElementById(
+      "offertaSelezionata"
+    );
+
+
+  const offerta =
+    OFFERTE_GIOKRI[
+      select.value
+    ];
+
+
+  /*
+   * Se l'offerta selezionata non è compatibile
+   * con il tipo di energia scelto, seleziona
+   * automaticamente una proposta compatibile.
+   */
+
+  if (
+    offerta &&
+    offerta.tipo !== tipo
+  ) {
+
+    let trovata = false;
+
+
+    for (
+      const chiave in OFFERTE_GIOKRI
+    ) {
+
+      if (
+        OFFERTE_GIOKRI[chiave].tipo === tipo
+      ) {
+
+        select.value = chiave;
+
+        trovata = true;
+
+        break;
+
+      }
+
+    }
+
+
+    if (!trovata) {
+
+      select.value =
+        "manuale";
+
+    }
+
+  }
+
+
+  aggiornaEtichetteUnita();
+
+  caricaOfferta();
+
+}
+
+
+/* ==========================================================
+   CARICA OFFERTA
+   ========================================================== */
+
+function caricaOfferta() {
+
+  const chiave =
+    document.getElementById(
+      "offertaSelezionata"
+    ).value;
+
+
+  aggiornaEtichetteUnita();
+
+
+  if (
+    chiave === "manuale"
+  ) {
+
+    document.getElementById(
+      "infoFornitore"
+    ).textContent =
+      "Manuale";
+
+
+    document.getElementById(
+      "infoOfferta"
+    ).textContent =
+      "Inserimento manuale";
+
+
+    document.getElementById(
+      "infoTipo"
+    ).textContent =
+      document.getElementById(
+        "tipoEnergia"
+      ).value === "gas"
+        ? "Gas"
+        : "Luce";
+
+
+    return;
+
+  }
+
+
+  const offerta =
+    OFFERTE_GIOKRI[chiave];
+
+
+  if (!offerta) {
+    return;
+  }
+
+
+  /*
+   * Tipo energia
+   */
+
+  document.getElementById(
+    "tipoEnergia"
+  ).value =
+    offerta.tipo;
+
+
+  aggiornaEtichetteUnita();
+
+
+  /*
+   * Informazioni sintetiche
+   */
+
+  document.getElementById(
+    "infoFornitore"
+  ).textContent =
+    offerta.fornitore;
+
+
+  document.getElementById(
+    "infoOfferta"
+  ).textContent =
+    offerta.nome;
+
+
+  document.getElementById(
+    "infoTipo"
+  ).textContent =
+    offerta.tipo === "gas"
+      ? "Gas"
+      : "Luce";
+
+
+  /*
+   * Campi compilati automaticamente
+   */
+
+  document.getElementById(
+    "fornitoreNuovo"
+  ).value =
+    offerta.fornitore;
+
+
+  document.getElementById(
+    "prezzoNuovo"
+  ).value =
+    offerta.prezzo;
+
+
+  document.getElementById(
+    "quotaFissaNuova"
+  ).value =
+    offerta.quotaFissa;
+
+
+  /*
+   * Tipo tariffa
+   */
+
+  const radioTariffa =
+    document.querySelector(
+      'input[name="tariffaNuova"][value="' +
+      offerta.tariffa +
+      '"]'
+    );
+
+
+  if (radioTariffa) {
+
+    radioTariffa.checked =
+      true;
+
+  }
+
+}
+
+
+/* ==========================================================
+   CALCOLO CONFRONTO
+   ========================================================== */
+
+function calcolaConfronto() {
+
+
+  const mesi =
+    parseFloat(
+      document.getElementById(
+        "mesi"
+      ).value
+    );
+
+
+  const consumo =
+    parseFloat(
+      document.getElementById(
+        "consumo"
+      ).value
+    );
+
+
+  const prezzoAttuale =
+    parseFloat(
+      document.getElementById(
+        "prezzoAttuale"
+      ).value
+    );
+
+
+  const quotaFissaAttuale =
+    parseFloat(
+      document.getElementById(
+        "quotaFissaAttuale"
+      ).value
+    );
+
+
+  const prezzoNuovo =
+    parseFloat(
+      document.getElementById(
+        "prezzoNuovo"
+      ).value
+    );
+
+
+  const quotaFissaNuova =
+    parseFloat(
+      document.getElementById(
+        "quotaFissaNuova"
+      ).value
+    );
+
+
+  const fornitoreAttuale =
+    document.getElementById(
+      "fornitoreAttuale"
+    ).value.trim();
+
+
+  const fornitoreNuovo =
+    document.getElementById(
+      "fornitoreNuovo"
+    ).value.trim();
+
+
+  const totaleBolletta =
+    parseFloat(
+      document.getElementById(
+        "totaleBolletta"
+      ).value
+    );
+
+
+  const tipoEnergia =
+    document.getElementById(
+      "tipoEnergia"
+    ).value;
+
+
+  /*
+   * Controllo dati minimi
+   */
+
+  if (
+
+    !mesi ||
+    mesi <= 0 ||
+
+    isNaN(consumo) ||
+    consumo < 0 ||
+
+    isNaN(prezzoAttuale) ||
+    prezzoAttuale < 0 ||
+
+    isNaN(quotaFissaAttuale) ||
+    quotaFissaAttuale < 0 ||
+
+    isNaN(prezzoNuovo) ||
+    prezzoNuovo < 0 ||
+
+    isNaN(quotaFissaNuova) ||
+    quotaFissaNuova < 0
+
+  ) {
+
+    alert(
+      "Controlla i dati inseriti prima di procedere."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Tariffe
+   */
+
+  const tariffaAttuale =
+    document.querySelector(
+      'input[name="tariffaAttuale"]:checked'
+    ).value;
+
+
+  const tariffaNuova =
+    document.querySelector(
+      'input[name="tariffaNuova"]:checked'
+    ).value;
+
+
+  /*
+   * COSTO ATTUALE
+   */
+
+  const costoEnergiaAttuale =
+    consumo *
+    prezzoAttuale;
+
+
+  const costoFissoAttuale =
+    quotaFissaAttuale *
+    mesi;
+
+
+  const costoPeriodoAttuale =
+    costoEnergiaAttuale +
+    costoFissoAttuale;
+
+
+  const costoAnnualeAttuale =
+    (
+      costoPeriodoAttuale /
+      mesi
+    ) * 12;
+
+
+  /*
+   * COSTO NUOVO
+   */
+
+  const costoEnergiaNuovo =
+    consumo *
+    prezzoNuovo;
+
+
+  const costoFissoNuovo =
+    quotaFissaNuova *
+    mesi;
+
+
+  const costoPeriodoNuovo =
+    costoEnergiaNuovo +
+    costoFissoNuovo;
+
+
+  const costoAnnualeNuovo =
+    (
+      costoPeriodoNuovo /
+      mesi
+    ) * 12;
+
+
+  /*
+   * RISPARMIO
+   */
+
+  const risparmioAnnuale =
+    costoAnnualeAttuale -
+    costoAnnualeNuovo;
+
+
+  const risparmioMensile =
+    risparmioAnnuale /
+    12;
+
+
+  let percentualeRisparmio =
+    0;
+
+
+  if (
+    costoAnnualeAttuale > 0
+  ) {
+
+    percentualeRisparmio =
+      (
+        risparmioAnnuale /
+        costoAnnualeAttuale
+      ) * 100;
+
+  }
+
+
+  /*
+   * UNITÀ
+   */
+
+  const unita =
+    tipoEnergia === "gas"
+      ? "Smc"
+      : "kWh";
+
+
+  /*
+   * RISULTATI FORNITURA ATTUALE
+   */
+
+  document.getElementById(
+    "risFornitoreAttuale"
+  ).textContent =
+    fornitoreAttuale ||
+    "Non indicato";
+
+
+  document.getElementById(
+    "risTariffaAttuale"
+  ).textContent =
+    tariffaAttuale;
+
+
+  document.getElementById(
+    "risPrezzoAttuale"
+  ).textContent =
+    numero(
+      prezzoAttuale,
+      4
+    ) +
+    " €/" +
+    unita;
+
+
+  document.getElementById(
+    "risQuotaFissaAttuale"
+  ).textContent =
+    euro(
+      quotaFissaAttuale
+    ) +
+    "/mese";
+
+
+  document.getElementById(
+    "risCostoAttuale"
+  ).textContent =
+    euro(
+      costoPeriodoAttuale
+    );
+
+
+  document.getElementById(
+    "risAnnualeAttuale"
+  ).textContent =
+    euro(
+      costoAnnualeAttuale
+    );
+
+
+  /*
+   * RISULTATI PROPOSTA GIOKRI
+   */
+
+  document.getElementById(
+    "risFornitoreNuovo"
+  ).textContent =
+    fornitoreNuovo ||
+    "Non indicato";
+
+
+  document.getElementById(
+    "risTariffaNuova"
+  ).textContent =
+    tariffaNuova;
+
+
+  document.getElementById(
+    "risPrezzoNuovo"
+  ).textContent =
+    numero(
+      prezzoNuovo,
+      4
+    ) +
+    " €/" +
+    unita;
+
+
+  document.getElementById(
+    "risQuotaFissaNuova"
+  ).textContent =
+    euro(
+      quotaFissaNuova
+    ) +
+    "/mese";
+
+
+  document.getElementById(
+    "risCostoNuovo"
+  ).textContent =
+    euro(
+      costoPeriodoNuovo
+    );
+
+
+  document.getElementById(
+    "risAnnualeNuovo"
+  ).textContent =
+    euro(
+      costoAnnualeNuovo
+    );
+
+
+  /*
+   * RISPARMIO
+   */
+
+  document.getElementById(
+    "risparmioAnnuale"
+  ).textContent =
+    euro(
+      risparmioAnnuale
+    );
+
+
+  document.getElementById(
+    "risparmioMensile"
+  ).textContent =
+    euro(
+      risparmioMensile
+    );
+
+
+  document.getElementById(
+    "risparmioPercentuale"
+  ).textContent =
+    numero(
+      percentualeRisparmio,
+      1
+    ) +
+    "%";
+
+
+  /*
+   * CONTROLLO BOLLETTA
+   */
+
+  const controllo =
+    document.getElementById(
+      "controlloBolletta"
+    );
+
+
+  controllo.innerHTML = "";
+
+
+  if (
+    !isNaN(totaleBolletta) &&
+    totaleBolletta > 0
+  ) {
+
+    const differenza =
+      totaleBolletta -
+      costoPeriodoAttuale;
+
+
+    const differenzaAssoluta =
+      Math.abs(
+        differenza
+      );
+
+
+    const percentualeDifferenza =
+      totaleBolletta > 0
+        ? (
+            differenzaAssoluta /
+            totaleBolletta
+          ) * 100
+        : 0;
+
+
+    if (
+      percentualeDifferenza <= 10
+    ) {
+
+      controllo.innerHTML = `
+
+        <div class="success-box">
+
+          <strong>
+            ✓ Controllo bolletta
+          </strong>
+
+          <br><br>
+
+          Totale bolletta inserito:
+          <strong>
+            ${euro(totaleBolletta)}
+          </strong>
+
+          <br>
+
+          Costo semplificato calcolato:
+          <strong>
+            ${euro(costoPeriodoAttuale)}
+          </strong>
+
+          <br>
+
+          Differenza:
+          <strong>
+            ${euro(differenzaAssoluta)}
+          </strong>
+
+          <br><br>
+
+          I dati risultano sostanzialmente
+          coerenti per un confronto semplificato.
+
+        </div>
+
+      `;
+
+    } else {
+
+      controllo.innerHTML = `
+
+        <div class="warning-box">
+
+          <strong>
+            ⚠ Controllo bolletta
+          </strong>
+
+          <br><br>
+
+          Totale bolletta inserito:
+          <strong>
+            ${euro(totaleBolletta)}
+          </strong>
+
+          <br>
+
+          Costo semplificato calcolato:
+          <strong>
+            ${euro(costoPeriodoAttuale)}
+          </strong>
+
+          <br>
+
+          Differenza:
+          <strong>
+            ${euro(differenzaAssoluta)}
+          </strong>
+
+          <br><br>
+
+          La differenza è superiore al 10%.
+          È probabile che nella bolletta siano presenti
+          ulteriori componenti di costo non considerate
+          nel calcolo semplificato.
+
+        </div>
+
+      `;
+
+    }
+
+  }
+
+
+  /*
+   * MOSTRA RISULTATO
+   */
+
+  document.getElementById(
+    "risultato"
+  ).style.display =
+    "block";
+
+
+  /*
+   * SCROLL AL RISULTATO
+   */
+
+  document.getElementById(
+    "risultato"
+  ).scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
+/* ==========================================================
+   NUOVA ANALISI
+   ========================================================== */
+
+function nuovaAnalisi() {
+
+
+  /*
+   * Reset fornitura attuale
+   */
+
+  document.getElementById(
+    "fornitoreAttuale"
+  ).value = "";
+
+
+  document.getElementById(
+    "consumo"
+  ).value = "";
+
+
+  document.getElementById(
+    "prezzoAttuale"
+  ).value = "";
+
+
+  document.getElementById(
+    "quotaFissaAttuale"
+  ).value = "";
+
+
+  document.getElementById(
+    "totaleBolletta"
+  ).value = "";
+
+
+  /*
+   * Reset energia
+   */
+
+  document.getElementById(
+    "tipoEnergia"
+  ).value =
+    "luce";
+
+
+  document.getElementById(
+    "mesi"
+  ).value =
+    2;
+
+
+  /*
+   * Reset proposta
+   */
+
+  document.getElementById(
+    "offertaSelezionata"
+  ).value =
+    "magis_mia_luce_fix_smart";
+
+
+  /*
+   * Tariffa attuale
+   */
+
+  document.querySelector(
+    'input[name="tariffaAttuale"][value="Fissa"]'
+  ).checked =
+    true;
+
+
+  /*
+   * Tariffa nuova
+   */
+
+  document.querySelector(
+    'input[name="tariffaNuova"][value="Fissa"]'
+  ).checked =
+    true;
+
+
+  /*
+   * Nasconde risultato
+   */
+
+  document.getElementById(
+    "risultato"
+  ).style.display =
+    "none";
+
+
+  /*
+   * Cancella controllo
+   */
+
+  document.getElementById(
+    "controlloBolletta"
+  ).innerHTML =
+    "";
+
+
+  /*
+   * Ripristina offerta MAGIS luce
+   */
+
+  aggiornaEtichetteUnita();
+
+  caricaOfferta();
+
+
+  /*
+   * Torna all'inizio
+   */
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* ==========================================================
+   AVVIO
+   ========================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    aggiornaEtichetteUnita();
+
+    caricaOfferta();
+
+  }
+);
+
+
+</script>
+
+</body>
+</html>
 ```
