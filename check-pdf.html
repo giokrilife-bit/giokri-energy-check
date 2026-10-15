@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Modulo GiOKri Life per leggere e confrontare i dati di una bolletta elettrica PDF.">
+  <title>GiOKri Energy Check · Lettura PDF</title>
+  <link rel="stylesheet" href="check-pdf.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">GiOKri <span>Life</span></div>
+    <div class="topbar-sub">ENERGY CHECK · LETTURA PDF</div>
+  </header>
+  <main class="container">
+    <section class="intro panel">
+      <p class="eyebrow">STRUMENTO DI VERIFICA</p>
+      <h1>Controlla la tua bolletta luce</h1>
+      <p>Carica una bolletta PDF per provare a leggere i dati della vendita di energia. I valori estratti sono modificabili: controllali sempre sulla bolletta prima di usare il confronto.</p>
+      <div class="notice"><strong>Nota:</strong> il modulo legge PDF con testo selezionabile. Le scansioni e le foto salvate in PDF potrebbero non essere leggibili in questa versione.</div>
+    </section>
+
+    <section class="panel">
+      <h2>1. Carica la bolletta</h2>
+      <label class="upload" for="pdfFile"><span class="upload-icon">↑</span><span><strong>Scegli il PDF della bolletta</strong><small>Il file viene elaborato nel browser, senza essere inviato a un server.</small></span></label>
+      <input id="pdfFile" type="file" accept="application/pdf,.pdf">
+      <div id="fileStatus" class="status" role="status">Nessun file selezionato.</div>
+      <div class="actions"><button id="extractBtn" class="btn btn-primary" disabled>Leggi i dati della bolletta</button><button id="clearBtn" class="btn btn-light" type="button">Azzera</button></div>
+      <p class="small muted">Se la lettura automatica non trova un dato, puoi inserirlo manualmente nei campi qui sotto.</p>
+    </section>
+
+    <section class="panel">
+      <h2>2. Verifica i dati estratti</h2>
+      <p class="muted small">Inserire esclusivamente le componenti di vendita indicate nei riquadri “Scontrino dell'energia” e “Box dell'offerta”. Non includere trasporto, oneri, imposte, IVA o altre voci.</p>
+      <div class="field-grid">
+        <div class="field"><label for="supplier">Fornitore attuale</label><input id="supplier" placeholder="Es. Sinergy Lucegas"></div>
+        <div class="field"><label for="offerName">Nome offerta attuale</label><input id="offerName" placeholder="Nome riportato in bolletta"></div>
+        <div class="field"><label for="period">Periodo fatturato</label><input id="period" placeholder="Es. agosto 2026"></div>
+        <div class="field"><label for="months">Durata del periodo (mesi)</label><input id="months" type="number" min="0.1" step="0.1" value="1"></div>
+        <div class="field"><label for="consumption">Consumo del periodo (kWh)</label><input id="consumption" inputmode="decimal" placeholder="Es. 476"></div>
+        <div class="field"><label for="tariffType">Tipo di tariffa attuale</label><select id="tariffType"><option value="variabile">Variabile</option><option value="fissa">Fissa</option><option value="non indicata">Non indicata</option></select></div>
+        <div class="field"><label for="energyCost">Spesa vendita per consumi (€)</label><input id="energyCost" inputmode="decimal" placeholder="Es. 116,82"><small>Voce “di cui spesa per la vendita di energia elettrica” nella “Quota per consumi”.</small></div>
+        <div class="field"><label for="fixedCost">Spesa vendita quota fissa (€)</label><input id="fixedCost" inputmode="decimal" placeholder="Es. 10,89"><small>Voce “di cui spesa per la vendita di energia elettrica” nella “Quota fissa”.</small></div>
+      </div>
+      <div class="derived-grid">
+        <div class="derived"><span>Prezzo medio vendita energia</span><strong id="currentUnitPrice">—</strong><small>Spesa vendita consumi ÷ kWh</small></div>
+        <div class="derived"><span>Quota fissa mensile stimata</span><strong id="currentMonthlyFixed">—</strong><small>Spesa vendita quota fissa ÷ mesi</small></div>
+        <div class="derived"><span>Spesa vendita stimata annua</span><strong id="currentAnnualCost">—</strong><small>Proiezione indicativa del periodo</small></div>
+      </div>
+      <div class="actions"><button id="compareBtn" class="btn btn-primary">Confronta le offerte</button><button id="printBtn" class="btn btn-light">Stampa / Salva PDF</button></div>
+    </section>
+
+    <section class="panel" id="resultsPanel">
+      <h2>3. Confronto indicativo delle offerte</h2>
+      <p class="muted small">Il confronto considera soltanto prezzo per kWh e quota fissa di vendita. Non rappresenta il totale della bolletta e non comprende altre componenti.</p>
+      <div id="resultMessage" class="status">Inserisci e verifica i dati, quindi seleziona “Confronta le offerte”.</div>
+      <div class="table-wrap"><table><thead><tr><th>Offerta</th><th>Prezzo energia</th><th>Quota fissa/mese</th><th>Stima periodo</th><th>Stima annua</th><th>Differenza annua vs attuale</th></tr></thead><tbody id="offersBody"><tr><td colspan="6" class="muted">Il confronto apparirà qui.</td></tr></tbody></table></div>
+      <p class="footnote">Le stime sono orientative e basate sui dati inseriti e sulle condizioni delle offerte configurate nel modulo. Per una tariffa variabile, il prezzo osservato in bolletta è un dato del periodo e non garantisce il prezzo futuro. Verificare sempre le condizioni economiche aggiornate dell'offerta prima di proporla al cliente.</p>
+    </section>
+    <footer>GiOKri Life · Modulo di supporto alla verifica della bolletta · Versione iniziale per energia elettrica</footer>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="check-pdf.js"></script>
+</body>
+</html>
