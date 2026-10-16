@@ -161,69 +161,63 @@
    * Estrae esclusivamente la componente di vendita.
    * Non somma rete, oneri, potenza, imposte o IVA.
    */
-  function extractLabeled(text) {
-    const lines = linesOf(text);
-    const flat = text.replace(/\s+/g, ' ');
+  
+function extractLabeled(text) {
+  const flat = text.replace(/\s+/g, ' ');
+  let consumption = NaN;
+  let energyCost = NaN;
+  let fixedCost = NaN;
 
-    let consumption = NaN;
-    let energyCost = NaN;
-    let fixedCost = NaN;
-    let section = '';
+  // 1. Consumo fatturato: il PDF può inserire parole
+  // tra "Consumi fatturati" e il valore in kWh.
+  const consumptionMatch =
+    flat.match(/consumi fatturati\b[^0-9]{0,120}([0-9][0-9., ]*)\s*kWh/i);
 
-    const consumptionPatterns = [
-      /consumi fatturati\s*([0-9][0-9., ]*)\s*kWh/i,
-      /consumo\s+(?:totale\s+)?(?:fatturato|del periodo)\s*[:\-]?\s*([0-9][0-9., ]*)\s*kWh/i,
-      /energia elettrica prelevata\s*([0-9][0-9., ]*)\s*kWh/i
-    ];
-
-    for (const re of consumptionPatterns) {
-      const m = flat.match(re);
-      if (m) {
-        consumption = parseNumber(m[1]);
-        if (Number.isFinite(consumption) && consumption > 0) break;
-      }
+  if (consumptionMatch) {
+    const value = parseNumber(consumptionMatch[1]);
+    if (Number.isFinite(value) && value > 0) {
+      consumption = value;
     }
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-
-      if (/quota per consumi/i.test(line)) section = 'consumi';
-      if (/quota fissa/i.test(line)) section = 'fissa';
-
-      if (/quota potenza/i.test(line) && !/quota fissa/i.test(line)) {
-        section = 'potenza';
-      }
-
-      if (/di cui spesa per la vendita di energia elettrica/i.test(line)) {
-        const amount = amountAfterLabel(lines, i, 3);
-
-        if (section === 'consumi' && Number.isFinite(amount)) {
-          energyCost = amount;
-        }
-
-        if (section === 'fissa' && Number.isFinite(amount)) {
-          fixedCost = amount;
-        }
-      }
-    }
-
-    // Tentativo alternativo sul Box dell'offerta.
-    if (!Number.isFinite(energyCost)) {
-      const m = flat.match(
-        /di cui quota spesa consumi[^0-9]{0,70}([0-9][0-9., ]*)\s*€/i
-      );
-      if (m) energyCost = parseNumber(m[1]);
-    }
-
-    if (!Number.isFinite(fixedCost)) {
-      const m = flat.match(
-        /di cui quota spesa fisso[^0-9]{0,70}([0-9][0-9., ]*)\s*€/i
-      );
-      if (m) fixedCost = parseNumber(m[1]);
-    }
-
-    return { consumption, energyCost, fixedCost };
   }
+
+  // 2. Priorità al Box dell'offerta:
+  // contiene direttamente gli importi delle componenti di vendita.
+  const boxConsumption = flat.match(
+    /di cui quota spesa consumi\s*:\s*([0-9]+(?:[.,][0-9]{1,2})?)\s*€/i
+  );
+
+  const boxFixed = flat.match(
+    /di cui quota spesa fisso\s*:\s*([0-9]+(?:[.,][0-9]{1,2})?)\s*€/i
+  );
+
+  if (boxConsumption) {
+    energyCost = parseNumber(boxConsumption[1]);
+  }
+
+  if (boxFixed) {
+    fixedCost = parseNumber(boxFixed[1]);
+  }
+
+  // 3. Alternativa: Scontrino dell'energia.
+  // Prende l'importo in euro dopo la dicitura di vendita,
+  // ignorando il prezzo unitario espresso in €/kWh o €/mese.
+  const saleAmounts = [
+    ...flat.matchAll(
+      /di cui spesa per la vendita di energia elettrica.{0,180}?([0-9][0-9., ]*)\s*€(?!\s*\/)/gi
+    )
+  ].map(match => parseNumber(match[1]))
+   .filter(value => Number.isFinite(value) && value >= 0);
+
+  if (!Number.isFinite(energyCost) && saleAmounts.length >= 1) {
+    energyCost = saleAmounts[0];
+  }
+
+  if (!Number.isFinite(fixedCost) && saleAmounts.length >= 2) {
+    fixedCost = saleAmounts[1];
+  }
+
+  return { consumption, energyCost, fixedCost };
+}
 
   async function extractPdf(file) {
     if (!window.pdfjsLib) {
