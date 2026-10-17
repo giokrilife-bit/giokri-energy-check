@@ -718,6 +718,13 @@ function extractBoxOffer(text) {
        
       const durationMonths = guessDurationMonths(extractedText);
 
+       console.log(
+  'VERIFICA DURATA:',
+  extractedText.match(/.{0,70}(?:dal|periodo|al)\s*.{0,100}/gi),
+  'Mesi rilevati:',
+  durationMonths
+);
+
       if (Number.isFinite(durationMonths) && $('months')) {
         $('months').value = String(durationMonths).replace('.', ',');
       }
