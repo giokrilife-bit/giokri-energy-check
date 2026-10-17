@@ -537,6 +537,83 @@ function extractBoxOffer(text) {
     return m ? m[0].toLowerCase() : '';
   }
 
+   
+  function guessDurationMonths(text) {
+    const normalized = normalizeText(text).replace(/\s+/g, ' ');
+
+    // Cerca intervalli di date espliciti, ad esempio:
+    // dal 01/08/2026 al 31/08/2026
+    // Periodo di fatturazione: 01/08/2026 - 30/09/2026
+    const date = '(\\d{1,2}[\\/.-]\\d{1,2}[\\/.-]\\d{4})';
+
+    const patterns = [
+      new RegExp(
+        '\\b(?:dal|da)\\s*' + date +
+        '\\s*(?:al|a|[-–—])\\s*' + date,
+        'ig'
+      ),
+      new RegExp(
+        '(?:periodo\\s+(?:di\\s+)?(?:fatturazione|riferimento|fornitura|consumo|fatturato))' +
+        '[^\\d]{0,40}' + date +
+        '\\s*(?:al|a|[-–—])\\s*' + date,
+        'ig'
+      )
+    ];
+
+    function parseDate(value) {
+      const parts = value.split(/[\\/.-]/).map(Number);
+      const day = parts[0];
+      const month = parts[1];
+      const year = parts[2];
+
+      const d = new Date(Date.UTC(year, month - 1, day));
+
+      if (
+        d.getUTCFullYear() !== year ||
+        d.getUTCMonth() !== month - 1 ||
+        d.getUTCDate() !== day
+      ) {
+        return null;
+      }
+
+      return d;
+    }
+
+    for (const re of patterns) {
+      let match;
+
+      while ((match = re.exec(normalized)) !== null) {
+        const start = parseDate(match[1]);
+        const end = parseDate(match[2]);
+
+        if (!start || !end || end < start) continue;
+
+        // Conta entrambi i giorni del periodo fatturato.
+        const days =
+          Math.round((end - start) / 86400000) + 1;
+
+        // Converte i giorni in mesi medi.
+        let months = days / (365.2425 / 12);
+
+        // Arrotonda ai mesi interi quando la durata è
+        // chiaramente compatibile con uno o più mesi.
+        const nearest = Math.round(months);
+
+        if (
+          nearest >= 1 &&
+          Math.abs(months - nearest) <= 0.08
+        ) {
+          months = nearest;
+        }
+
+        return Math.round(months * 100) / 100;
+      }
+    }
+
+    return NaN;
+  }
+
+
   function guessSupplier(text) {
     const low = normalizeText(text).toLowerCase();
 
@@ -645,6 +722,14 @@ function extractBoxOffer(text) {
 
       const period = guessPeriod(extractedText);
       if (period && $('period')) $('period').value = period;
+
+       
+      const durationMonths = guessDurationMonths(extractedText);
+
+      if (Number.isFinite(durationMonths) && $('months')) {
+        $('months').value = String(durationMonths).replace('.', ',');
+      }
+
 
       const supplier = guessSupplier(extractedText);
       if (supplier && $('supplier')) $('supplier').value = supplier;
