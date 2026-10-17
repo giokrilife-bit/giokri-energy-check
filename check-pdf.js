@@ -290,31 +290,55 @@
     return NaN;
   }
 
-  function extractBoxOffer(text) {
-    const flat = normalizeText(text).replace(/\s+/g, ' ');
+  
+function extractBoxOffer(text) {
+  const flat = normalizeText(text).replace(/\s+/g, ' ');
 
-    // Gestisce il Box dell'offerta anche quando la punteggiatura
-    // o gli spazi cambiano fra un fornitore e l'altro.
-    const boxPatterns = [
-      /di cui\s+consumi\s*[:\-]?\s*€?\s*([0-9][0-9., ]*)\s*[,;]?\s*quota\s+fissa\s*[:\-]?\s*€?\s*([0-9][0-9., ]*)/i,
-      /quota\s+per\s+consumi\s*[:\-]?\s*€?\s*([0-9][0-9., ]*)[\s\S]{0,100}?quota\s+fissa\s*[:\-]?\s*€?\s*([0-9][0-9., ]*)/i
-    ];
+  // Importi in formato italiano: 61,18 oppure 13,31.
+  // Evita che la virgola separatrice venga incorporata nel numero.
+  const number = '(\\d+(?:[.,]\\d{1,6})?)';
 
-    for (const re of boxPatterns) {
-      const m = flat.match(re);
+  const patterns = [
+    new RegExp(
+      'di cui\\s+consumi\\s*:\\s*€?\\s*' +
+      number +
+      '\\s*,?\\s*quota\\s+fissa\\s*:\\s*€?\\s*' +
+      number,
+      'i'
+    ),
+    new RegExp(
+      'di cui\\s+quota\\s+spesa\\s+consumi\\s*:\\s*€?\\s*' +
+      number +
+      '[\\s\\S]{0,150}?di cui\\s+quota\\s+spesa\\s+fisso\\s*:\\s*€?\\s*' +
+      number,
+      'i'
+    )
+  ];
 
-      if (m) {
-        const a = parseNumber(m[1]);
-        const b = parseNumber(m[2]);
+  for (const re of patterns) {
+    const m = flat.match(re);
 
-        if (Number.isFinite(a) && Number.isFinite(b) && a >= 0 && b >= 0) {
-          return { energyCost: a, fixedCost: b };
-        }
+    if (m) {
+      const energyCost = parseNumber(m[1]);
+      const fixedCost = parseNumber(m[2]);
+
+      if (
+        Number.isFinite(energyCost) &&
+        Number.isFinite(fixedCost) &&
+        energyCost >= 0 &&
+        fixedCost >= 0
+      ) {
+        return { energyCost, fixedCost };
       }
     }
-
-    return { energyCost: NaN, fixedCost: NaN };
   }
+
+  return {
+    energyCost: NaN,
+    fixedCost: NaN
+  };
+}
+
 
   function extractFromBillSections(text) {
     const lines = linesOf(text);
