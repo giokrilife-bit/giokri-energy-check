@@ -593,25 +593,17 @@ function extractBoxOffer(text) {
           Math.round((end - start) / 86400000) + 1;
 
         // Converte i giorni in mesi medi.
-        let months = days / (365.2425 / 12);
+               // Una fattura mensile deve essere riconosciuta come 1 mese.
+        // Per intervalli più lunghi, stima la durata in mesi.
+        let months;
 
-        // Arrotonda ai mesi interi quando la durata è
-        // chiaramente compatibile con uno o più mesi.
-        const nearest = Math.round(months);
-
-        if (
-          nearest >= 1 &&
-          Math.abs(months - nearest) <= 0.08
-        ) {
-          months = nearest;
+        if (days <= 35) {
+          months = 1;
+        } else {
+          months = Math.round(days / (365.2425 / 12));
         }
 
-        return Math.round(months * 100) / 100;
-      }
-    }
-
-    return NaN;
-  }
+        return months;
 
 
   function guessSupplier(text) {
