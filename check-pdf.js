@@ -538,12 +538,9 @@ function extractBoxOffer(text) {
   }
 
    
+  
   function guessDurationMonths(text) {
     const normalized = normalizeText(text).replace(/\s+/g, ' ');
-
-    // Cerca intervalli di date espliciti, ad esempio:
-    // dal 01/08/2026 al 31/08/2026
-    // Periodo di fatturazione: 01/08/2026 - 30/09/2026
     const date = '(\\d{1,2}[\\/.-]\\d{1,2}[\\/.-]\\d{4})';
 
     const patterns = [
@@ -553,7 +550,7 @@ function extractBoxOffer(text) {
         'ig'
       ),
       new RegExp(
-        '(?:periodo\\s+(?:di\\s+)?(?:fatturazione|riferimento|fornitura|consumo|fatturato))' +
+        'periodo\\s+(?:di\\s+)?(?:fatturazione|riferimento|fornitura|consumo|fatturato)' +
         '[^\\d]{0,40}' + date +
         '\\s*(?:al|a|[-–—])\\s*' + date,
         'ig'
@@ -565,7 +562,6 @@ function extractBoxOffer(text) {
       const day = parts[0];
       const month = parts[1];
       const year = parts[2];
-
       const d = new Date(Date.UTC(year, month - 1, day));
 
       if (
@@ -588,22 +584,17 @@ function extractBoxOffer(text) {
 
         if (!start || !end || end < start) continue;
 
-        // Conta entrambi i giorni del periodo fatturato.
         const days =
           Math.round((end - start) / 86400000) + 1;
 
-        // Converte i giorni in mesi medi.
-               // Una fattura mensile deve essere riconosciuta come 1 mese.
-        // Per intervalli più lunghi, stima la durata in mesi.
-        let months;
+        if (days <= 35) return 1;
 
-        if (days <= 35) {
-          months = 1;
-        } else {
-          months = Math.round(days / (365.2425 / 12));
-        }
+        return Math.round(days / (365.2425 / 12));
+      }
+    }
 
-        return months;
+    return NaN;
+  }
 
 
   function guessSupplier(text) {
