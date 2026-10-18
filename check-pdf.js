@@ -881,8 +881,8 @@ function extractBoxOffer(text) {
       if (el) el.value = '';
     });
 
-    if ($('months')) $('months').value = ' ';
-    if ($('tariffType')) $('tariffType').value = ' ';
+   if ($('months')) $('months').value = '';
+if ($('tariffType')) $('tariffType').value = '';
 
     setStatus('Nessun file selezionato.');
 
